@@ -1,0 +1,81 @@
+@property --grad-base-pos-x {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 25%;
+}
+ @property --grad-base-pos-y {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 75%;
+}
+@property --grad-jitter-pos {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+@property --grad-pulse {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+@property --grad-color1-base {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: cyan;
+}
+@property --grad-color2-base {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: tomato;
+}
+:root {
+    --grad-color1: var(--grad-color1-base);
+    --grad-color2: var(--grad-color2-base);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --grad-color1: rgb(from var(--grad-color1-base) calc(255 - r) calc(255 - g) calc(255 - b));
+        --grad-color2: rgb(from var(--grad-color2-base) calc(255 - r) calc(255 - g) calc(255 - b));
+    }
+}
+body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    --grad-pos-x: calc(var(--grad-base-pos-x) + var(--grad-jitter-pos));
+    --grad-pos-y: calc(var(--grad-base-pos-y) + var(--grad-jitter-pos));
+    background: radial-gradient(circle at var(--grad-pos-x) var(--grad-pos-y), var(--grad-color1) var(--grad-pulse), var(--grad-color2) 100%);
+    animation:
+        bg-movement-x 4s ease-in-out infinite alternate,
+        bg-movement-y 8s ease-in-out infinite alternate,
+        bg-jitter 20s ease-in-out infinite alternate,
+        bg-pulse 6s ease-in-out infinite alternate;
+}
+
+h1 {
+    filter: invert(1);
+    mix-blend-mode: difference;
+}
+
+@keyframes bg-movement-x {
+    to {
+        --grad-base-pos-x: 75%;
+    }
+}
+@keyframes bg-movement-y {
+    to {
+        --grad-base-pos-y: 25%;
+    }
+}
+
+@keyframes bg-jitter {
+    to {
+        --grad-jitter-pos: 25%;
+    }
+}
+
+@keyframes bg-pulse {
+    to {
+        --grad-pulse: 25%;
+    }
+}
